@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/D:/Users/AndroidStudioProjects/Routing/app/src/main/res/values/dimens.xml -->
+    <eat-comment/>
+    <dimen name="padding_large">16dp</dimen>
+    <dimen name="padding_medium">8dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <!-- From: file:/D:/Users/AndroidStudioProjects/Routing/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="actionBar_direction">Get Directions</string>
+    <string name="app_name">RoutingTask Sample</string>
+    <string name="clearText">Click to clear text</string>
+    <string name="geocode_url">http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer</string>
+    <string name="hello">RoutingTask Sample</string>
+    <string name="my_location">My Location</string>
+    <string name="route">Route</string>
+    <string name="route_label">Press and hold map to route to that point or Click on the Get Directions icon</string>
+    <string name="routing_title">Routing</string>
+    <string name="sound">Sound</string>
+    <string name="swap_addresses">Swap addresses</string>
+    <string name="useCurrlocation">Use current Location</string>
+    <!-- From: file:/D:/Users/AndroidStudioProjects/Routing/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="AppTheme" parent="android:Theme.Light"/>
+</resources>

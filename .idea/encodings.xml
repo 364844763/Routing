@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/hit/jj/draw/DrawEvent.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/hit/jj/draw/DrawEventListener.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/hit/jj/draw/DrawTool.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/hit/jj/draw/Subject.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_layout.xml" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

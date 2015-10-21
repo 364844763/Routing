@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\贾杰\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.4.0\40340c0748190fe897baf7bffbc1b282734294e5\okhttp-2.4.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="40340c0748190fe897baf7bffbc1b282734294e5">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\okhttp-2.4.0-20f74d6c299f3a316c0ad6838553f3559b167162.jar" />
+    </item>
+    <item
+        jar="C:\Users\贾杰\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.5.0\bb7d4d96e780e8ef4f275c7d8dd3ef2883ddf99a\okio-1.5.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="bb7d4d96e780e8ef4f275c7d8dd3ef2883ddf99a">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\okio-1.5.0-e2857771ec24cd400eb1580939093c4bd794688a.jar" />
+    </item>
+    <item
+        jar="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\classes-4a6b5109ea07fb735d941e2f70beeb04172c0b6d.jar" />
+    </item>
+    <item
+        jar="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\exploded-aar\com.android.support\support-v13\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="8c046c952177602c858ed41c8fc492c939bde9aa">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\classes-5b2ffaa31551c7ab189478c809d1bd72f7690de6.jar" />
+    </item>
+    <item
+        jar="C:\Users\贾杰\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3\5fc52c41ef0239d1093a1eb7c3697036183677ce\gson-2.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="5fc52c41ef0239d1093a1eb7c3697036183677ce">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\gson-2.3-e78dc7e9e5f9304ac8b6e3ebaae8d9abfaf62c6d.jar" />
+    </item>
+    <item
+        jar="D:\Users\AndroidStudioProjects\Routing\app\libs\arcgis-android-app-toolkit.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="b4d6a76d5d9c6096697a2a17641a0c2bd139fc73">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\arcgis-android-app-toolkit-3a94c25958fec292585cfdb7cd7b2ea8887ffb2a.jar" />
+    </item>
+    <item
+        jar="D:\Users\AndroidStudioProjects\Routing\app\libs\jcifs-1.3.17.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="1a2f0e28cc9497fb4927ea2422605fb8023969b6">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\jcifs-1.3.17-26a0fdd298c63f0653111bf094c12290b167b118.jar" />
+    </item>
+    <item
+        jar="D:\Users\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-9f34d7c4ae62da9d70c293a4d14cfa7835351050.jar" />
+    </item>
+    <item
+        jar="D:\Users\AndroidStudioProjects\Routing\app\libs\arcgis-android-api.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="7ebd7184b0d839d06313c6bfd0291fce48a2b718">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\arcgis-android-api-8a8427e7bf6b5f85bc194be8c4c3cc3d02c396a6.jar" />
+    </item>
+    <item
+        jar="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\exploded-aar\com.android.support\support-v13\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="a0c456a59e1edab84702b48a626705aa1d830ccc">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-8e7f5c7775ff4bc80189fe7c75db4445f31897c6.jar" />
+    </item>
+    <item
+        jar="D:\Users\AndroidStudioProjects\Routing\app\libs\jackson-mapper-lgpl-1.9.5.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="ffbb48e87fa5e9107c17aaa0616f724d785a4d71">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\jackson-mapper-lgpl-1.9.5-9fcd108ad3e5cd6a4b2cb7a344e4869cacd42061.jar" />
+    </item>
+    <item
+        jar="D:\Users\AndroidStudioProjects\Routing\app\libs\jackson-core-lgpl-1.9.5.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="75ac72d19377a95225217cb4fdfa1290f3c81145">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\jackson-core-lgpl-1.9.5-62e56b1324465ca3637117d1faf5dcac44e2e878.jar" />
+    </item>
+    <item
+        jar="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-52d57cf5869a79ef5676a1674cd56987e33ae9d8.jar" />
+    </item>
+
+</items>
