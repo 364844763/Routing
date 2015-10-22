@@ -5,8 +5,9 @@ package com.hit.jj.pathplaning;
  */
 public class Path {
     private String id;
-    private String pid;
     private double length;
+    private String Start;
+    private String end;
 
     public String getEnd() {
         return end;
@@ -24,8 +25,6 @@ public class Path {
         Start = start;
     }
 
-    private String Start;
-    private String end;
 
     public String getId() {
         return id;
@@ -35,13 +34,6 @@ public class Path {
         this.id = id;
     }
 
-    public String getPid() {
-        return pid;
-    }
-
-    public void setPid(String pid) {
-        this.pid = pid;
-    }
 
     public double getLength() {
         return length;
