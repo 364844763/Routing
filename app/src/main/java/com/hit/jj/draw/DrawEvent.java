@@ -5,9 +5,6 @@ import com.esri.core.map.Graphic;
 import java.util.EventObject;
 
 /**
- * 
- * @author ropp gispace@yeah.net
- * 
  *
  * 画图事件，目前只封装了DRAW_END事件，如有需要，可添加DRAW_START之类的事件
  */
