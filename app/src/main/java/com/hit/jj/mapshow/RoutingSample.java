@@ -51,6 +51,8 @@ import com.esri.android.map.ags.ArcGISFeatureLayer;
 import com.esri.android.map.event.OnLongPressListener;
 import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.arcgis.android.samples.routing.R;
+import com.hit.jj.http.OkHttpClientManager;
+import com.hit.jj.pathplaning.Path;
 import com.hit.jj.pathplaning.PathFinding;
 import com.hit.jj.pathplaning.RoadRead;
 import com.esri.core.geometry.GeometryEngine;
@@ -72,6 +74,7 @@ import com.esri.core.tasks.na.RouteParameters;
 import com.esri.core.tasks.na.RouteResult;
 import com.esri.core.tasks.na.RouteTask;
 import com.esri.core.tasks.na.StopGraphic;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
 import java.io.IOException;
@@ -147,7 +150,7 @@ public class RoutingSample extends Activity implements
 		tileLayer = new ArcGISDynamicMapServiceLayer(
 				"http://58.199.250.101:6080/arcgis/rest/services/xmut/map/MapServer");
 		map.addLayer(tileLayer);
-        mFeatureLayer = new ArcGISFeatureLayer("http://58.199.250.101:6080/arcgis/rest/services/xm/path/FeatureServer/1", ArcGISFeatureLayer.MODE.SELECTION);
+        mFeatureLayer = new ArcGISFeatureLayer("http://58.199.250.101:6080/arcgis/rest/services/xm/path1/FeatureServer/0", ArcGISFeatureLayer.MODE.SELECTION);
         map.addLayer(mFeatureLayer);
 		Callout mapCallout = map.getCallout();
 		mapCallout.hide();
@@ -650,15 +653,29 @@ public class RoutingSample extends Activity implements
 	}
 
 	@Override
-	public void onDialogRouteClicked(String p1, String p2) {
+	public void onDialogRouteClicked(String p1, String p2)  {
 
 		FragmentManager fm = getFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.remove(fm.findFragmentByTag("Dialog")).commit();
 		List<String> msg;
 		String where="";
-		try {
 
+		try {
+			OkHttpClientManager.getAsyn("http://192.168.56.1:8082/HelloWorld?start=10934672&end=1580849", new OkHttpClientManager.ResultCallback<List< Path>>(){
+				@Override
+				public void onError(Request request, Exception e) {
+
+				}
+
+				@Override
+				public void onResponse(List< Path> paths) {
+					for ( Path path:paths){
+						Log.e("tag",path.getId());
+					}
+
+				}
+			});
 			PathFinding pathFinding=new PathFinding("10934672","1580849",roadRead.getNodes(),roadRead.getPaths());
 			msg=pathFinding.pathFinder();
 
