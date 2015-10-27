@@ -385,14 +385,6 @@ public class RoutingSample extends Activity implements
 
                     }
 				});
-			/*	Callout mapCallout = map.getCallout();
-
-				mapCallout.hide();
-				Point pnt = map.toMapPoint(x, y);*/
-
-//				int[] grs = graphicsLayer.getGraphicIDs(x, y, 20);
-//				Log.d("Test", "Graphics number is " + grs.length);
-
                 ArrayList<Graphic> tornadoEvents = new ArrayList<Graphic>();
                 SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(Color.RED, 20, SimpleMarkerSymbol.STYLE.DIAMOND);
                 graphic = new Graphic(s1, symbol, null);
@@ -400,26 +392,6 @@ public class RoutingSample extends Activity implements
                 symbol = new SimpleMarkerSymbol(Color.BLUE, 20, SimpleMarkerSymbol.STYLE.DIAMOND);
                 graphic = new Graphic(sp, symbol, null);
                 tornadoEvents.add(graphic);
-//
-//                Polyline pLine=new Polyline();
-//                new SimpleLineSymbol(Color.GREEN, 20);
-//                //设置Line对象的起始终止点
-//
-//                pLine.startPath(s1);
-//                pLine.lineTo(sp);
-//                symbol = new SimpleMarkerSymbol(Color.GREEN, 20, SimpleMarkerSymbol.STYLE.DIAMOND);
-//                 graphic = new Graphic(pLine,new SimpleLineSymbol(Color.BLACK, 4));
-//
-//                tornadoEvents.add(graphic);
-//                addReports(tornadoEvents);
-					// Here, we populate the Callout with the attribute information
-				/*	// from the report.
-					mapCallout.setOffset(0, -3);
-					mapCallout.setCoordinates(s1);
-					mapCallout.setMaxHeight(350);
-					mapCallout.setMaxWidth(900);
-					mapCallout.setStyle(R.xml.mycalloutprefs);
-					mapCallout.show();*/
 				clearAll();
 				QueryDirections(s1, sp);
 				return true;
@@ -670,13 +642,38 @@ public class RoutingSample extends Activity implements
 
 				@Override
 				public void onResponse(List< Path> paths) {
+					String where="";
 					for ( Path path:paths){
 						Log.e("tag",path.getId());
+						where=where+"luwang_ID="+"'"+path.getId()+"'"+" or ";
+						Query mQuery=new Query();
+						mQuery.setOutFields(new String[]{"*"});
+						//  mQuery.setWhere("luwang_DIRECTION='1'");
+						mQuery.setWhere(where.substring(0,where.length()-4));
+						Log.d("jj", "Select Features Error" +where.substring(0,where.length()-4));
+						mQuery.setReturnGeometry(true);
+						mQuery.setInSpatialReference(map.getSpatialReference());
+						mQuery.setSpatialRelationship(SpatialRelationship.INTERSECTS);
+						mFeatureLayer.selectFeatures(mQuery, ArcGISFeatureLayer.SELECTION_METHOD.NEW, new CallbackListener<FeatureSet>() {
+							@Override
+							public void onCallback(FeatureSet featureSet) {
+
+							}
+
+							@Override
+							public void onError(Throwable throwable) {
+								Log.d("jj", "Select Features Error" + mFeatureLayer.getFields()[0]);
+
+							}
+						});
 					}
 
 				}
 			});
-			PathFinding pathFinding=new PathFinding("10934672","1580849",roadRead.getNodes(),roadRead.getPaths());
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+/*			PathFinding pathFinding=new PathFinding("10934672","1580849",roadRead.getNodes(),roadRead.getPaths());
 			msg=pathFinding.pathFinder();
 
 			Log.e("",msg.get(0));
@@ -708,7 +705,7 @@ public class RoutingSample extends Activity implements
 				Log.d("jj", "Select Features Error" + mFeatureLayer.getFields()[0]);
 
 			}
-		});
+		});*/
 //		Point p_start = (Point) GeometryEngine.project(p1, wm, egs);
 //		Point p_dest = (Point) GeometryEngine.project(p2, wm, egs);
 //
@@ -800,17 +797,5 @@ public class RoutingSample extends Activity implements
 
 		}
 	}
-	private void addReports(ArrayList<Graphic> graphics) {
-		Graphic graphic;
-		// if there is something to add, do it...
-		if (graphics.size() > 0) {
 
-			for (int i = 0; i < graphics.size(); i++) {
-				graphic = graphics.get(i);
-				graphicsLayer.addGraphic(graphic);
-
-			}
-		}
-
-	}
 }

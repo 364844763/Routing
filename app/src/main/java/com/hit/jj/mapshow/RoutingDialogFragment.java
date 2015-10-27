@@ -16,8 +16,6 @@
 
 package com.hit.jj.mapshow;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
@@ -44,6 +42,8 @@ import com.esri.core.geometry.SpatialReference;
 import com.esri.core.tasks.geocode.Locator;
 import com.esri.core.tasks.geocode.LocatorFindParameters;
 import com.esri.core.tasks.geocode.LocatorGeocodeResult;
+
+import java.util.List;
 
 /*
  * This fragment displays a dialog box which contains text fields for source and destination addresses.
@@ -91,7 +91,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 
 	// Interface
 	public interface onGetRoute {
-		public void onDialogRouteClicked(String p1, String p2);
+		 void onDialogRouteClicked(String p1, String p2);
 	}
 
 	@Override
