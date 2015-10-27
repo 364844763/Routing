@@ -634,7 +634,7 @@ public class RoutingSample extends Activity implements
 		String where="";
 
 		try {
-			OkHttpClientManager.getAsyn("http://192.168.56.1:8082/HelloWorld?start=10934672&end=1580849", new OkHttpClientManager.ResultCallback<List< Path>>(){
+			OkHttpClientManager.getAsyn("http://192.168.56.1:8082/HelloWorld?start="+p1+"&end="+p2, new OkHttpClientManager.ResultCallback<List< Path>>(){
 				@Override
 				public void onError(Request request, Exception e) {
 
