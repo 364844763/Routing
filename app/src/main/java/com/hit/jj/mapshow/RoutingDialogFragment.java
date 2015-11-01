@@ -166,7 +166,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 				// addresses
 				if (!source.equals(destination)) {
 					// Geocode the addresses
-					//geocode(source, destination);
+					geocode(source, destination);
 					mCallback.onDialogRouteClicked(source, destination);
 				} else {
 					Toast.makeText(getActivity(),
@@ -189,7 +189,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 			LocatorFindParameters findParams_source = new LocatorFindParameters(
 					address1);
 			// set the search country to USA
-			findParams_source.setSourceCountry("USA");
+			findParams_source.setSourceCountry("CHINA");
 			// limit the results to 2
 			findParams_source.setMaxLocations(2);
 			// set address spatial reference to match map
@@ -198,7 +198,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 
 			LocatorFindParameters findParams_dest = new LocatorFindParameters(
 					address2);
-			findParams_dest.setSourceCountry("USA");
+			findParams_dest.setSourceCountry("CHINA");
 			findParams_dest.setMaxLocations(2);
 			findParams_dest.setOutSR(RoutingSample.map.getSpatialReference());
 
@@ -287,8 +287,8 @@ public class RoutingDialogFragment extends DialogFragment implements
 				Toast.makeText(getActivity(),
 						"Not a valid destination address", Toast.LENGTH_LONG)
 						.show();
-			}// else
-				//mCallback.onDialogRouteClicked(source, destination);
+			} else
+				mCallback.onDialogRouteClicked(source, destination);
 
 
 		}

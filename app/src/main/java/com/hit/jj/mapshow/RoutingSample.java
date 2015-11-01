@@ -351,15 +351,43 @@ public class RoutingSample extends Activity implements
                 List<String> msg;
                 String where="";
 				try {
+					OkHttpClientManager.getAsyn("http://192.168.56.1:8082/PathFindServer?start_x=" + s1.getY() +"&&start_y="+s1.getX()+ "&&end_x=" + sp.getY()+ "&&end_y="+sp.getX(), new OkHttpClientManager.ResultCallback<List<Path>>() {
+						@Override
+						public void onError(Request request, Exception e) {
+							Log.e("tag", "查询失败");
+						}
 
-					PathFinding pathFinding=new PathFinding("10934672","1580849",roadRead.getNodes(),roadRead.getPaths());
-                    msg=pathFinding.pathFinder();
+						@Override
+						public void onResponse(List<Path> paths) {
+							String where = "";
+							for (Path path : paths) {
+								Log.e("tag", path.getId());
+								where = where + "luwang_ID=" + "'" + path.getId() + "'" + " or ";
+								Query mQuery = new Query();
+								mQuery.setOutFields(new String[]{"*"});
+								//  mQuery.setWhere("luwang_DIRECTION='1'");
+								mQuery.setWhere(where.substring(0, where.length() - 4));
+								Log.d("jj", "Select Features Error" + where.substring(0, where.length() - 4));
+								mQuery.setReturnGeometry(true);
+								mQuery.setInSpatialReference(map.getSpatialReference());
+								mQuery.setSpatialRelationship(SpatialRelationship.INTERSECTS);
+								mFeatureLayer.selectFeatures(mQuery, ArcGISFeatureLayer.SELECTION_METHOD.NEW, new CallbackListener<FeatureSet>() {
+									@Override
+									public void onCallback(FeatureSet featureSet) {
 
-					Log.e("",msg.get(0));
-                    for (String str:msg){
-                        where=where+"luwang_ID="+"'"+str+"'"+" or ";
-                    }
-				} catch (Exception e) {
+									}
+
+									@Override
+									public void onError(Throwable throwable) {
+										Log.d("jj", "Select Features Error" + mFeatureLayer.getFields()[0]);
+
+									}
+								});
+							}
+
+						}
+					});
+				}catch (Exception e){
 					e.printStackTrace();
 				}
 				if (where.isEmpty()||where.equals("")){
