@@ -393,6 +393,7 @@ public class RoutingSample extends Activity implements
 				}
 				if (where.isEmpty()||where.equals("")){
 					return false;
+
 				}
 				Query mQuery=new Query();
                 mQuery.setOutFields(new String[]{"*"});
