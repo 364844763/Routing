@@ -265,6 +265,7 @@ public class RoutingSample extends Activity implements
 
 			@Override
 			public void onClick(View v) {
+				Log.e("mLocation",mLocation.getX()+" "+mLocation.getY());
 				Point p = (Point) GeometryEngine.project(mLocation, egs, wm);
 				map.zoomToResolution(p, 20.0);
 
@@ -587,10 +588,14 @@ public class RoutingSample extends Activity implements
 			if (loc == null)
 				return;
 			boolean zoomToMe = (mLocation == null) ? true : false;
+			Log.e("mLocation","实际"+loc.getLongitude()+" "+loc.getLatitude());
 			mLocation = new Point(loc.getLongitude(), loc.getLatitude());
+			//测试数据
+			mLocation = new Point(119.2789993,26.1023006);
 			if (zoomToMe) {
 				Point p = (Point) GeometryEngine.project(mLocation, egs, wm);
 				map.zoomToResolution(p, 20.0);
+
 			}
 		}
 
@@ -662,7 +667,7 @@ public class RoutingSample extends Activity implements
 		String where="";
 
 		try {
-			OkHttpClientManager.getAsyn("http://192.168.56.1:8082/HelloWorld?start="+p1+"&end="+p2, new OkHttpClientManager.ResultCallback<List< Path>>(){
+			OkHttpClientManager.getAsyn("http://58.199.250.101:8088/MyPathPlanServer/HelloWorld?start="+p1+"&end="+p2, new OkHttpClientManager.ResultCallback<List< Path>>(){
 				@Override
 				public void onError(Request request, Exception e) {
 
