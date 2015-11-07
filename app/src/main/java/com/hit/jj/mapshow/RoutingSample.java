@@ -342,19 +342,19 @@ public class RoutingSample extends Activity implements
 
 			public boolean onLongPress(final float x, final float y) {
 				final Point loc = map.toMapPoint(x, y);
-				final Point loc1 = map.toMapPoint(x-100, y-100);
                 Graphic graphic;
 				Point p = (Point) GeometryEngine.project(loc, wm, egs);
-				Point s =(Point) GeometryEngine.project(loc1, wm, egs);
 				Point s1 = new Point(119.2789993,26.1023006);
 				Point sp = new Point(119.3249969,26.0660992);
 
+				Log.e("tag",loc.getY()+" "+loc.getX());
                 List<String> msg;
                 String where="";
 				try {
-					OkHttpClientManager.getAsyn("http://192.168.56.1:8082/PathFindServer?start_x=" + s1.getY() +"&&start_y="+s1.getX()+ "&&end_x=" + sp.getY()+ "&&end_y="+sp.getX(), new OkHttpClientManager.ResultCallback<List<Path>>() {
+					OkHttpClientManager.getAsyn("http://192.168.56.1:8082/PathFindServer?start_x=" +mLocation.getY() +"&&start_y="+mLocation.getX()+ "&&end_x=" + loc.getY()+ "&&end_y="+loc.getX(), new OkHttpClientManager.ResultCallback<List<Path>>() {
 						@Override
 						public void onError(Request request, Exception e) {
+
 							Log.e("tag", "查询失败");
 						}
 
@@ -362,8 +362,10 @@ public class RoutingSample extends Activity implements
 						public void onResponse(List<Path> paths) {
 							String where = "";
 							for (Path path : paths) {
-								Log.e("tag", path.getId());
+								//Log.e("tag", path.getId());
 								where = where + "luwang_ID=" + "'" + path.getId() + "'" + " or ";
+							}
+							    Log.e("tag", where);
 								Query mQuery = new Query();
 								mQuery.setOutFields(new String[]{"*"});
 								//  mQuery.setWhere("luwang_DIRECTION='1'");
@@ -384,7 +386,7 @@ public class RoutingSample extends Activity implements
 
 									}
 								});
-							}
+
 
 						}
 					});
@@ -588,16 +590,16 @@ public class RoutingSample extends Activity implements
 		public void onLocationChanged(Location loc) {
 			if (loc == null)
 				return;
-			boolean zoomToMe = (mLocation == null) ? true : false;
-			Log.e("mLocation","实际"+loc.getLongitude()+" "+loc.getLatitude());
+			boolean zoomToMe = (mLocation == null);
+			//Log.e("mLocation","实际"+loc.getLongitude()+" "+loc.getLatitude());
 			mLocation = new Point(loc.getLongitude(), loc.getLatitude());
 			//测试数据
-			mLocation = new Point(119.2789993,26.1023006);
+//			mLocation = new Point(119.2789993,26.1023006);
 			if (zoomToMe) {
 				Point p = (Point) GeometryEngine.project(mLocation, egs, wm);
 				map.zoomToResolution(p, 20.0);
-
-			}
+//
+		}
 		}
 
 		public void onProviderDisabled(String provider) {
@@ -680,6 +682,7 @@ public class RoutingSample extends Activity implements
 					for ( Path path:paths){
 						Log.e("tag",path.getId());
 						where=where+"luwang_ID="+"'"+path.getId()+"'"+" or ";
+					}
 						Query mQuery=new Query();
 						mQuery.setOutFields(new String[]{"*"});
 						//  mQuery.setWhere("luwang_DIRECTION='1'");
@@ -700,7 +703,7 @@ public class RoutingSample extends Activity implements
 
 							}
 						});
-					}
+
 
 				}
 			});
