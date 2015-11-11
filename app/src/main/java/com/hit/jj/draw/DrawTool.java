@@ -25,7 +25,7 @@ import com.esri.core.symbol.SimpleMarkerSymbol;
  * 
  * @author ropp gispace@yeah.net
  * 
- *         »­Í¼ÊµÏÖÀà£¬Ö§³Ö»­µã¡¢¾ØĞÎ¡¢Ïß¡¢¶à±ßĞÎ¡¢Ô²¡¢ÊÖ»­Ïß¡¢ÊÖ»­¶à±ßĞÎ£¬¿ÉÉèÖÃ¸÷ÖÖÍ¼ĞÎµÄsymbol¡£
+ *         ç”»å›¾å®ç°ç±»ï¼Œæ”¯æŒç”»ç‚¹ã€çŸ©å½¢ã€çº¿ã€å¤šè¾¹å½¢ã€åœ†ã€æ‰‹ç”»çº¿ã€æ‰‹ç”»å¤šè¾¹å½¢ï¼Œå¯è®¾ç½®å„ç§å›¾å½¢çš„symbolã€‚
  */
 public class DrawTool extends Subject {
 
@@ -149,7 +149,7 @@ public class DrawTool extends Subject {
 		this.activate(type);
 	}
 
-	// À©Õ¹MapOnTouchListener£¬ÊµÏÖ»­Í¼¹¦ÄÜ
+	// æ‰©å±•MapOnTouchListenerï¼Œå®ç°ç”»å›¾åŠŸèƒ½
 	class DrawTouchListener extends MapOnTouchListener {
 
 		public DrawTouchListener(Context context, MapView view) {

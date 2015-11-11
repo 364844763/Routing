@@ -27,12 +27,13 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.esri.arcgis.android.samples.routing.R;
@@ -42,7 +43,9 @@ import com.esri.core.geometry.SpatialReference;
 import com.esri.core.tasks.geocode.Locator;
 import com.esri.core.tasks.geocode.LocatorFindParameters;
 import com.esri.core.tasks.geocode.LocatorGeocodeResult;
+import com.hit.jj.pathplaning.Buliding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -55,7 +58,7 @@ import java.util.List;
  */
 
 public class RoutingDialogFragment extends DialogFragment implements
-		OnFocusChangeListener, OnClickListener {
+		 OnClickListener ,View.OnFocusChangeListener{
 
 	EditText et_source;
 	EditText et_destination;
@@ -63,11 +66,13 @@ public class RoutingDialogFragment extends DialogFragment implements
 	static ProgressDialog dialog;
 	static Handler handler;
 	Button bGetRoute;
-
+	BuildingAdapter mAdapter;
+	List<Buliding> mList;
+	ListView et_destination_lv;
 	// For storing the result of Geocoding Task
 	List<LocatorGeocodeResult> result_origin = null;
 	List<LocatorGeocodeResult> result_destination = null;
-
+	List<String> bulidings;
 	// Interface to be implemented by the activity
 	onGetRoute mCallback;
 
@@ -115,7 +120,53 @@ public class RoutingDialogFragment extends DialogFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
+
 		View view = inflater.inflate(R.layout.dialog_layout, container);
+		// Adding custom Listener to edit text views
+		//et_source.addTextChangedListener(new MyTextWatcher(et_source));
+
+
+		// Adding Focus Change listener to the edit text views
+//		et_source.setOnFocusChangeListener(this);
+//		et_destination.setOnFocusChangeListener(this);
+
+		// Setting onClick listener for the icons on the dialog
+
+
+		// Removing title from the dialog box
+		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		initView(view);
+		initListener();
+		return view;
+	}
+
+	private void initListener() {
+
+		img_dCancel.setOnClickListener(this);
+		img_sCancel.setOnClickListener(this);
+		img_swap.setOnClickListener(this);
+		img_myLocaion.setOnClickListener(this);
+		et_source.addTextChangedListener(new MyTextWatcher(et_source));
+		et_destination.addTextChangedListener(new MyTextWatcher(et_destination));
+		et_destination_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				et_destination.setText(mList.get(position).getName());
+				//et_destination_lv.setVisibility(View.GONE);
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						mAdapter.clear();
+					}
+				},500);
+
+				//et_destination.setFocusable(false);
+			}
+		});
+	}
+
+	private void initView(View view) {
 
 		// Set the views from the XML layout
 		et_source = (EditText) view.findViewById(R.id.et_source);
@@ -125,63 +176,12 @@ public class RoutingDialogFragment extends DialogFragment implements
 		img_swap = (ImageView) view.findViewById(R.id.iv_interchange);
 		img_myLocaion = (ImageView) view.findViewById(R.id.iv_myDialogLocation);
 		bGetRoute = (Button) view.findViewById(R.id.bGetRoute);
-
-		// Adding custom Listener to edit text views
-		et_source.addTextChangedListener(new MyTextWatcher(et_source));
-		et_destination
-				.addTextChangedListener(new MyTextWatcher(et_destination));
-
-		// Adding Focus Change listener to the edit text views
-		et_source.setOnFocusChangeListener(this);
-		et_destination.setOnFocusChangeListener(this);
-
-		// Setting onClick listener for the icons on the dialog
-		img_dCancel.setOnClickListener(this);
-		img_sCancel.setOnClickListener(this);
-		img_swap.setOnClickListener(this);
-		img_myLocaion.setOnClickListener(this);
-
-		// Adding onClick listener for the button
-		bGetRoute.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				source = et_source.getText().toString();
-				destination = et_destination.getText().toString();
-
-				// If either of the edit text is empty, display the toast
-				if (source.equals("") || destination.equals("")) {
-					Toast.makeText(getActivity(), "Place cannot be empty",
-							Toast.LENGTH_LONG).show();
-					return;
-				}
-
-				// Checking if the edit text views contain "My Location"
-				if (source.equals("My Location"))
-					src_isMyLocation = true;
-				if (destination.equals("My Location"))
-					dest_isMyLocation = true;
-
-				// If source and destination are not same then geocode the
-				// addresses
-				if (!source.equals(destination)) {
-					// Geocode the addresses
-					geocode(source, destination);
-					mCallback.onDialogRouteClicked(source, destination);
-				} else {
-					Toast.makeText(getActivity(),
-							"Source and Destination should be different",
-							Toast.LENGTH_LONG).show();
-				}
-
-			}
-		});
-
-		// Removing title from the dialog box
-		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
-		return view;
+		et_destination_lv= (ListView) view.findViewById(R.id.et_destination_lv);
+		mList=new ArrayList<Buliding>();
+		mAdapter=new BuildingAdapter(getActivity(),mList);
+		et_destination_lv.setAdapter(mAdapter);
 	}
+
 
 	private void geocode(String address1, String address2) {
 		try {
@@ -328,14 +328,56 @@ public class RoutingDialogFragment extends DialogFragment implements
 			String text = editable.toString();
 			switch (view.getId()) {
 			case R.id.et_source:
-				if (text.length() > 0)
+				if (text.length() > 0) {
 					img_sCancel.setVisibility(View.VISIBLE);
+
+
+				}
 				else
 					img_sCancel.setVisibility(View.INVISIBLE);
 				break;
 			case R.id.et_destination:
-				if (text.length() > 0)
+				if (text.length() > 0){
 					img_dCancel.setVisibility(View.VISIBLE);
+					if (text.length() > 1){
+						new Handler().post(new Runnable() {
+							@Override
+							public void run() {
+								for (int i = 0; i < 10; i++) {
+									Buliding buliding=new Buliding();
+									buliding.setName("test"+i);
+									mList.add(buliding);
+
+								}
+								mAdapter.setData(mList);
+							}
+						});
+					}
+//					OkHttpClientManager.getAsyn("http://58.199.250.101:8088/MyPathPlanServer/HelloWorld", new OkHttpClientManager.ResultCallback<List<String>>() {
+//						@Override
+//						public void onError(Request request, Exception e) {
+//							bulidings = new ArrayList<String>();
+//							for (int i = 0; i < 10; i++) {
+//								String buliding = "test" + i;
+//								bulidings.add(buliding);
+//							}
+//
+//							new Handler().post(new Runnable() {
+//								@Override
+//								public void run() {
+//									mAdapter.setData(bulidings);
+//								}
+//							});
+////							mAdapter.setData(bulidings);
+//						}
+//
+//						@Override
+//						public void onResponse(List<String> bulidings) {
+//
+//							mAdapter.setData(bulidings);
+//						}
+//					});
+				}
 				else
 					img_dCancel.setVisibility(View.INVISIBLE);
 
@@ -366,7 +408,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 		}
 	}
 
-	// OnClick events for the icons on the dialog box
+//	// OnClick events for the icons on the dialog box
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -395,6 +437,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 			break;
 
 		}
+
 
 	}
 
