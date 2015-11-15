@@ -67,7 +67,10 @@ public class RoutingDialogFragment extends DialogFragment implements
 	static Handler handler;
 	Button bGetRoute;
 	BuildingAdapter mAdapter;
+	BuildingAdapter mAdapterS;
 	List<Buliding> mList;
+	List<Buliding> mListS;
+	ListView  et_source_lv;
 	ListView et_destination_lv;
 	// For storing the result of Geocoding Task
 	List<LocatorGeocodeResult> result_origin = null;
@@ -75,7 +78,8 @@ public class RoutingDialogFragment extends DialogFragment implements
 	List<String> bulidings;
 	// Interface to be implemented by the activity
 	onGetRoute mCallback;
-
+	Point p1 = null;
+	Point p2 = null;
 	// To check if the edit text contains "My Location"
 	boolean src_isMyLocation = false;
 	boolean dest_isMyLocation = false;
@@ -84,6 +88,8 @@ public class RoutingDialogFragment extends DialogFragment implements
 	final SpatialReference egs = SpatialReference.create(4326);
 	String source;
 	String destination;
+	int sourcePosition;
+	int destinationPosition;
 	// Image views for the icons
 	ImageView img_sCancel, img_dCancel, img_myLocaion, img_swap;
 
@@ -96,7 +102,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 
 	// Interface
 	public interface onGetRoute {
-		 void onDialogRouteClicked(String p1, String p2);
+		 void onDialogRouteClicked(Point p1, Point p2);
 	}
 
 	@Override
@@ -142,7 +148,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 	}
 
 	private void initListener() {
-
+		bGetRoute.setOnClickListener(this);
 		img_dCancel.setOnClickListener(this);
 		img_sCancel.setOnClickListener(this);
 		img_swap.setOnClickListener(this);
@@ -153,13 +159,30 @@ public class RoutingDialogFragment extends DialogFragment implements
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				et_destination.setText(mList.get(position).getName());
+				p2=new Point(mList.get(position).getLatitude(),mList.get(position).getLongitude());
 				//et_destination_lv.setVisibility(View.GONE);
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
 						mAdapter.clear();
 					}
-				},500);
+				}, 500);
+
+				//et_destination.setFocusable(false);
+			}
+		});
+		et_source_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				et_source.setText(mListS.get(position).getName());
+				p1=new Point(mListS.get(position).getLatitude(),mListS.get(position).getLongitude());
+				//et_destination_lv.setVisibility(View.GONE);
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						mAdapterS.clear();
+					}
+				}, 500);
 
 				//et_destination.setFocusable(false);
 			}
@@ -180,6 +203,10 @@ public class RoutingDialogFragment extends DialogFragment implements
 		mList=new ArrayList<Buliding>();
 		mAdapter=new BuildingAdapter(getActivity(),mList);
 		et_destination_lv.setAdapter(mAdapter);
+		et_source_lv= (ListView) view.findViewById(R.id.et_source_lv);
+		mListS=new ArrayList<Buliding>();
+		mAdapterS=new BuildingAdapter(getActivity(),mListS);
+		et_source_lv.setAdapter(mAdapterS);
 	}
 
 
@@ -288,7 +315,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 						"Not a valid destination address", Toast.LENGTH_LONG)
 						.show();
 			} else
-				mCallback.onDialogRouteClicked(source, destination);
+				mCallback.onDialogRouteClicked(p1, p2);
 
 
 		}
@@ -330,15 +357,11 @@ public class RoutingDialogFragment extends DialogFragment implements
 			case R.id.et_source:
 				if (text.length() > 0) {
 					img_sCancel.setVisibility(View.VISIBLE);
-
-
-				}
-				else
-					img_sCancel.setVisibility(View.INVISIBLE);
-				break;
-			case R.id.et_destination:
-				if (text.length() > 0){
-					img_dCancel.setVisibility(View.VISIBLE);
+					if (text.equals("My Location")){
+						dest_isMyLocation=false;
+						src_isMyLocation=true;
+						break;
+					}
 					if (text.length() > 1){
 						new Handler().post(new Runnable() {
 							@Override
@@ -346,6 +369,39 @@ public class RoutingDialogFragment extends DialogFragment implements
 								for (int i = 0; i < 10; i++) {
 									Buliding buliding=new Buliding();
 									buliding.setName("test"+i);
+									buliding.setLatitude(1);
+									buliding.setLongitude(2);
+									mListS.add(buliding);
+
+								}
+								mAdapterS.setData(mListS);
+							}
+						});
+					}
+
+				}
+				else{
+					img_sCancel.setVisibility(View.INVISIBLE);
+					mAdapterS.clear();
+				}
+				break;
+			case R.id.et_destination:
+				if (text.length() > 0){
+					img_dCancel.setVisibility(View.VISIBLE);
+					if (text.equals("My Location")){
+						dest_isMyLocation=true;
+						src_isMyLocation=false;
+						break;
+					}
+					if (text.length() > 1){
+						new Handler().post(new Runnable() {
+							@Override
+							public void run() {
+								for (int i = 0; i < 10; i++) {
+									Buliding buliding=new Buliding();
+									buliding.setName("test"+i);
+									buliding.setLatitude(1);
+									buliding.setLongitude(2);
 									mList.add(buliding);
 
 								}
@@ -378,9 +434,10 @@ public class RoutingDialogFragment extends DialogFragment implements
 //						}
 //					});
 				}
-				else
+				else {
 					img_dCancel.setVisibility(View.INVISIBLE);
-
+					mAdapter.clear();
+				}
 				break;
 			}
 		}
@@ -415,10 +472,14 @@ public class RoutingDialogFragment extends DialogFragment implements
 		case R.id.iv_cancelSource:
 			// Clearing the text
 			et_source.getText().clear();
+			mAdapterS.clear();
+			p1=null;
 			break;
 		case R.id.iv_cancelDestination:
 			// Clearing the text
 			et_destination.getText().clear();
+			mAdapter.clear();
+			p2=null;
 			break;
 		case R.id.iv_myDialogLocation:
 
@@ -435,10 +496,45 @@ public class RoutingDialogFragment extends DialogFragment implements
 			et_source.setText(et_destination.getText().toString());
 			et_destination.setText(temp);
 			break;
+			case R.id.bGetRoute:
+			{
+//				handler.post(new MyRunnable());
+//				Point p1 = null;
+//				Point p2 = null;
 
+				// Projecting the current location to the output spatial ref
+				Point currLocation = (Point) GeometryEngine.project(
+						RoutingSample.mLocation, egs, wm);
+
+				// Assignign current location to the field with value as
+				// "My Location"
+				if (et_source.getText().toString().equals("My Location"))
+					p1 = currLocation;
+
+
+				if (dest_isMyLocation)
+					p2 = currLocation;
+
+
+				if (p1 == null) {
+					Toast.makeText(getActivity(), "Not a valid source address",
+							Toast.LENGTH_LONG).show();
+				} else if (p2 == null) {
+					Toast.makeText(getActivity(),
+							"Not a valid destination address", Toast.LENGTH_LONG)
+							.show();
+				} else {
+					p1 = new Point(119.2636333,26.05468024);
+					p2= new Point(119.2654226,26.05423861);
+					mCallback.onDialogRouteClicked(p1, p2);
+
+				}
+			}
+				break;
+			}
 		}
 
 
 	}
 
-}
+

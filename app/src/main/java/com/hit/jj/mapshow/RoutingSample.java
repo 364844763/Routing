@@ -351,7 +351,7 @@ public class RoutingSample extends Activity implements
                 List<String> msg;
                 String where="";
 				try {
-					OkHttpClientManager.getAsyn("http://192.168.56.1:8082/PathFindServer?start_x=" +mLocation.getY() +"&&start_y="+mLocation.getX()+ "&&end_x=" + loc.getY()+ "&&end_y="+loc.getX(), new OkHttpClientManager.ResultCallback<List<Path>>() {
+					OkHttpClientManager.getAsyn("http://58.199.250.101:8088/MyPathPlanServer/PathFindServer?start_x=" +mLocation.getY() +"&&start_y="+mLocation.getX()+ "&&end_x=" + loc.getY()+ "&&end_y="+loc.getX(), new OkHttpClientManager.ResultCallback<List<Path>>() {
 						@Override
 						public void onError(Request request, Exception e) {
 
@@ -660,7 +660,7 @@ public class RoutingSample extends Activity implements
 	}
 
 	@Override
-	public void onDialogRouteClicked(String p1, String p2)  {
+	public void onDialogRouteClicked(Point p1, Point p2)  {
 
 		FragmentManager fm = getFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
@@ -669,7 +669,7 @@ public class RoutingSample extends Activity implements
 		String where="";
 
 		try {
-			OkHttpClientManager.getAsyn("http://58.199.250.101:8088/MyPathPlanServer/HelloWorld?start="+p1+"&end="+p2, new OkHttpClientManager.ResultCallback<List< Path>>(){
+			OkHttpClientManager.getAsyn("http://192.168.56.1:8082/PathFindServer?start_x=" +p1.getY() +"&&start_y="+p1.getX()+ "&&end_x=" + p2.getY()+ "&&end_y="+p2.getX(), new OkHttpClientManager.ResultCallback<List< Path>>(){
 				@Override
 				public void onError(Request request, Exception e) {
 
@@ -686,14 +686,14 @@ public class RoutingSample extends Activity implements
 						mQuery.setOutFields(new String[]{"*"});
 						//  mQuery.setWhere("luwang_DIRECTION='1'");
 						mQuery.setWhere(where.substring(0,where.length()-4));
-						Log.d("jj", "Select Features Error" +where.substring(0,where.length()-4));
+						Log.d("jj", "Select Features Error" +where.substring(0,where.length()));
 						mQuery.setReturnGeometry(true);
 						mQuery.setInSpatialReference(map.getSpatialReference());
 						mQuery.setSpatialRelationship(SpatialRelationship.INTERSECTS);
 						mFeatureLayer.selectFeatures(mQuery, ArcGISFeatureLayer.SELECTION_METHOD.NEW, new CallbackListener<FeatureSet>() {
 							@Override
 							public void onCallback(FeatureSet featureSet) {
-
+								Log.d("jj", "成功");
 							}
 
 							@Override
