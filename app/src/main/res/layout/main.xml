@@ -47,7 +47,12 @@
                 android:padding="8dp"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
-
+            <ImageView
+                android:id="@+id/iv_speak"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:src="@drawable/btn_speak_now" />
             <ImageView
                 android:id="@+id/iv_getDirections"
                 android:layout_width="0dp"

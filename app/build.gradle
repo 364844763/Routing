@@ -36,4 +36,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okio:okio:1.5.0'
     compile 'com.android.support:support-v13:23.0.1'
+    compile files('libs/VoiceRecognition-2.0.1.jar')
 }

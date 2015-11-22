@@ -107,6 +107,7 @@ public class RoutingSample extends Activity implements
     // Variable to hold server exception to show to user
     Exception mException = null;
     GraphicsLayer graphicsLayer = null;
+    ImageView img_speak;
     ImageView img_cancel;
     ImageView img_currLocation;
     ImageView img_getDirections;
@@ -213,7 +214,7 @@ public class RoutingSample extends Activity implements
         img_currLocation = (ImageView) findViewById(R.id.iv_myLocation);
         img_getDirections = (ImageView) findViewById(R.id.iv_getDirections);
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
+        img_speak= (ImageView) findViewById(R.id.iv_speak);
         // Get the location display manager and start reading location. Don't
         // auto-pan
         // to center our position
@@ -281,6 +282,18 @@ public class RoutingSample extends Activity implements
                 FragmentTransaction ft = fm.beginTransaction();
                 RoutingDialogFragment frag_dialog = new RoutingDialogFragment();
                 ft.add(frag_dialog, "Dialog");
+                ft.commit();
+
+            }
+        });
+        img_speak.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                SpeakDialogFragment frag_dialog = new SpeakDialogFragment();
+                ft.add(frag_dialog, "SpeakDialog");
                 ft.commit();
 
             }
@@ -668,12 +681,12 @@ public class RoutingSample extends Activity implements
         ft.remove(fm.findFragmentByTag("Dialog")).commit();
         List<String> msg;
         String where = "";
-
+        Log.e("jj","http://58.199.250.101:8088/MyPathPlanServer/PathFindServer?start_x=" + p1.getX() + "&&start_y=" + p1.getY() + "&&end_x=" + p2.getX() + "&&end_y=" + p2.getY());
         try {
-            OkHttpClientManager.getAsyn("http://58.199.250.101:8088/MyPathPlanServer/PathFindServer?start_x=" + p1.getY() + "&&start_y=" + p1.getX() + "&&end_x=" + p2.getY() + "&&end_y=" + p2.getX(), new OkHttpClientManager.ResultCallback<List<Path>>() {
+            OkHttpClientManager.getAsyn("http://58.199.250.101:8088/MyPathPlanServer/PathFindServer?start_x=" + p1.getX() + "&&start_y=" + p1.getY() + "&&end_x=" + p2.getX() + "&&end_y=" + p2.getY(), new OkHttpClientManager.ResultCallback<List<Path>>() {
                 @Override
                 public void onError(Request request, Exception e) {
-
+                    Log.e("jj","查询失败");
                 }
 
                 @Override
@@ -702,9 +715,39 @@ public class RoutingSample extends Activity implements
                             Log.d("jj", "Select Features Error" + mFeatureLayer.getFields()[0]);
 
                         }
+
                     });
 
+                    {
+                        where = "";
+                        for (Path path : paths) {
+                            Log.e("tag", path.getId());
+                            where = where + "luwang_ID=" + "'" + path.getId() + "'" + " or ";
 
+                        mQuery = new Query();
+                        mQuery.setOutFields(new String[]{"*"});
+                        //  mQuery.setWhere("luwang_DIRECTION='1'");
+                        mQuery.setWhere(where.substring(0, where.length() - 4));
+                        Log.d("jj", "Select Features Error" + where.substring(0, where.length()));
+                        mQuery.setReturnGeometry(true);
+                        mQuery.setInSpatialReference(map.getSpatialReference());
+                        mQuery.setSpatialRelationship(SpatialRelationship.INTERSECTS);
+                        mFeatureLayer.selectFeatures(mQuery, ArcGISFeatureLayer.SELECTION_METHOD.NEW, new CallbackListener<FeatureSet>() {
+                            @Override
+                            public void onCallback(FeatureSet featureSet) {
+                                Log.d("jj", "成功");
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+                                Log.d("jj", "Select Features Error" + mFeatureLayer.getFields()[0]);
+
+                            }
+
+                        });}
+
+
+                    }
                 }
             });
         } catch (Exception e) {

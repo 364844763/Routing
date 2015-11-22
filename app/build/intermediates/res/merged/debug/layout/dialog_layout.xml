@@ -62,7 +62,12 @@
             android:visibility="invisible" 
             android:contentDescription="@string/clearText"/>
     </LinearLayout>
+    <ListView
+        android:id="@+id/et_source_lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+    </ListView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,7 +94,12 @@
             android:visibility="invisible" 
             android:contentDescription="@string/clearText"/>
     </LinearLayout>
+    <ListView
+        android:id="@+id/et_destination_lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+    </ListView>
     <Button
         android:id="@+id/bGetRoute"
         android:layout_width="157dp"

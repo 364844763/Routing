@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:2:1-30:12
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:2:1-47:12
 	package
 		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:3:5-54
 		INJECTED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml
@@ -25,38 +25,78 @@ uses-permission#android.permission.ACCESS_FINE_LOCATION
 ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:11:5-79
 	android:name
 		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:11:22-76
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:12:5-71
+	android:name
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:12:22-68
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:13:5-79
+	android:name
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:13:22-76
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:14:5-75
+	android:name
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:14:22-72
+uses-permission#android.permission.WRITE_SETTINGS
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:15:5-73
+	android:name
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:15:22-70
 application
-ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:13:5-28:19
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:17:5-45:19
 MERGED from [com.android.support:support-v13:23.0.1] D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\exploded-aar\com.android.support\support-v13\23.0.1\AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:support-v4:23.0.1] D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\AndroidManifest.xml:22:5-20
 	android:label
-		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:15:9-41
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:19:9-41
 	android:allowBackup
-		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:16:9-35
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:20:9-35
 	android:icon
-		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:14:9-45
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:18:9-45
+meta-data#com.baidu.speech.APP_ID
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:21:9-23:39
+	android:value
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:23:13-36
+	android:name
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:22:13-51
+meta-data#com.baidu.speech.API_KEY
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:24:9-26:56
+	android:value
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:26:13-53
+	android:name
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:25:13-52
+meta-data#com.baidu.speech.SECRET_KEY
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:27:9-29:64
+	android:value
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:29:13-61
+	android:name
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:28:13-55
+service#com.baidu.speech.VoiceRecognitionService
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:31:9-33:40
+	android:exported
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:33:13-37
+	android:name
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:32:13-68
 activity#com.hit.jj.mapshow.RoutingSample
-ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:17:9-26:20
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:34:9-43:20
 	android:label
-		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:20:13-42
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:37:13-42
 	android:configChanges
-		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:19:13-74
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:36:13-74
 	android:name
-		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:18:13-60
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:35:13-60
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:21:13-25:29
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:38:13-42:29
 action#android.intent.action.MAIN
-ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:22:17-69
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:39:17-69
 	android:name
-		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:22:25-66
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:39:25-66
 category#android.intent.category.LAUNCHER
-ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:24:17-77
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:41:17-77
 	android:name
-		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:24:27-74
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:41:27-74
 activity#com.hit.jj.mapshow.ShowDirections
-ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:27:9-70
+ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:44:9-70
 	android:name
-		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:27:19-67
+		ADDED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml:44:19-67
 uses-sdk
 INJECTED from D:\Users\AndroidStudioProjects\Routing\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.android.support:support-v13:23.0.1] D:\Users\AndroidStudioProjects\Routing\app\build\intermediates\exploded-aar\com.android.support\support-v13\23.0.1\AndroidManifest.xml:20:5-44

@@ -90,6 +90,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 14 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="VoiceRecognition-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="arcgis-android-app-toolkit" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="library" exported="" name="arcgis-android-api" level="project" />
