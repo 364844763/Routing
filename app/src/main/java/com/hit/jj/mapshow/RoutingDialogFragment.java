@@ -537,7 +537,7 @@ public class RoutingDialogFragment extends DialogFragment implements
     public void getSearchTips(String keyWords, final boolean isSrc){
         HashMap map=new HashMap();
         map.put("name",keyWords);
-        OkHttpClientManager.postAsyn("http://192.168.56.1:8082/BuildingFindServer", new OkHttpClientManager.ResultCallback<List<Buliding>>() {
+        OkHttpClientManager.postAsyn("http://58.199.250.101:8088/MyPathPlanServer/BuildingFindServer", new OkHttpClientManager.ResultCallback<List<Buliding>>() {
             @Override
             public void onError(Request request, Exception e) {
                 Toast.makeText(getActivity(),"网络错误",Toast.LENGTH_LONG).show();

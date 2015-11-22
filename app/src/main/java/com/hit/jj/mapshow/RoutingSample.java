@@ -670,7 +670,7 @@ public class RoutingSample extends Activity implements
         String where = "";
 
         try {
-            OkHttpClientManager.getAsyn("http://192.168.56.1:8082/PathFindServer?start_x=" + p1.getY() + "&&start_y=" + p1.getX() + "&&end_x=" + p2.getY() + "&&end_y=" + p2.getX(), new OkHttpClientManager.ResultCallback<List<Path>>() {
+            OkHttpClientManager.getAsyn("http://58.199.250.101:8088/MyPathPlanServer/PathFindServer?start_x=" + p1.getY() + "&&start_y=" + p1.getX() + "&&end_x=" + p2.getY() + "&&end_y=" + p2.getX(), new OkHttpClientManager.ResultCallback<List<Path>>() {
                 @Override
                 public void onError(Request request, Exception e) {
 
