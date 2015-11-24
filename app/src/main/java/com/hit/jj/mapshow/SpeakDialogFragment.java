@@ -16,12 +16,14 @@
 
 package com.hit.jj.mapshow;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
@@ -30,22 +32,29 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.baidu.speech.VoiceRecognitionService;
 import com.esri.arcgis.android.samples.routing.R;
+import com.esri.core.geometry.Point;
+import com.hit.jj.http.OkHttpClientManager;
+import com.hit.jj.pathplaning.Buliding;
+import com.squareup.okhttp.Request;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 界面只有输入目的地址，起止地址默认用当前位置坐标
  */
-public class SpeakDialogFragment extends DialogFragment implements RecognitionListener {
+public class SpeakDialogFragment extends DialogFragment implements RecognitionListener{
     private ImageView iv_speech;
     private Button btn_getRoute;
     private EditText et_address;
@@ -53,7 +62,14 @@ public class SpeakDialogFragment extends DialogFragment implements RecognitionLi
     private View speechWave;
     private SpeechRecognizer speechRecognizer;
     private Context context;
-
+    private BuildingAdapter mAdapter;
+    private Point p;
+    SpeakCallback mCallback;
+    List<Buliding> mList;
+    ListView lv_source;
+    public interface SpeakCallback{
+        void onDialogRouteClicked(Point p);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,8 +88,44 @@ public class SpeakDialogFragment extends DialogFragment implements RecognitionLi
         initListener();
         return view;
     }
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (SpeakCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement onDrawerListSelectedListener");
+        }
+
+    }
 
     private void initListener() {
+        mList=new ArrayList<Buliding>();
+        mAdapter=new BuildingAdapter(getActivity(),mList);
+        lv_source.setAdapter(mAdapter);
+        lv_source.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                et_address.setText(mList.get(position).getName());
+                p = new Point(mList.get(position).getLatitude(), mList.get(position).getLongitude());
+                //et_destination_lv.setVisibility(View.GONE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.clear();
+                    }
+                }, 500);
+
+                //et_destination.setFocusable(false);
+            }
+        });
+        btn_getRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Point sp = new Point(119.3249969, 26.0660992);
+                mCallback.onDialogRouteClicked(p);
+            }
+        });
         speechRecognizer.setRecognitionListener(this);
         iv_speech.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -103,7 +155,8 @@ public class SpeakDialogFragment extends DialogFragment implements RecognitionLi
         et_address = (EditText) view.findViewById(R.id.et_address);
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context,
                 new ComponentName(context, VoiceRecognitionService.class));
-
+        lv_source= (ListView) view.findViewById(R.id.lv_destination);
+        lv_source.setAdapter(mAdapter);
         speechTips = View.inflate(context, R.layout.popup_speech, null);
         speechWave = speechTips.findViewById(R.id.wave);
         speechTips.setVisibility(View.GONE);
@@ -206,6 +259,8 @@ public class SpeakDialogFragment extends DialogFragment implements RecognitionLi
         ArrayList<String> nbest = results
                 .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         et_address.setText(nbest.get(0));
+        getSearchTips(nbest.get(0));
+
     }
 
     @Override
@@ -220,6 +275,26 @@ public class SpeakDialogFragment extends DialogFragment implements RecognitionLi
             String reason = params.get("reason").toString();
             Toast.makeText(context, reason, Toast.LENGTH_LONG).show();
         }
+    }
+    public void getSearchTips(String keyWords){
+        String url="http://58.199.250.101:8088/MyPathPlanServer/BuildingFindServer?name=";
+        url+=keyWords;
+        OkHttpClientManager.getAsyn(url, new OkHttpClientManager.ResultCallback<List<Buliding>>() {
+            @Override
+            public void onError(Request request, Exception e) {
+                Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onResponse(List<Buliding> bulidings) {
+                 {
+                     mList = bulidings;
+
+                    mAdapter.setData(bulidings);
+                }
+            }
+        });
+
     }
 }
 

@@ -84,7 +84,7 @@ import java.util.Map;
 
 public class RoutingSample extends Activity implements
         RoutingListFragment.onDrawerListSelectedListener,
-        RoutingDialogFragment.onGetRoute {
+        RoutingDialogFragment.onGetRoute,SpeakDialogFragment.SpeakCallback {
     public static MapView map = null;
     ArcGISDynamicMapServiceLayer tileLayer;
     GraphicsLayer routeLayer, hiddenSegmentsLayer;
@@ -590,6 +590,15 @@ public class RoutingSample extends Activity implements
         curDirections.add("Destination");
     }
 
+    @Override
+    public void onDialogRouteClicked(Point p) {
+        Point s1 = new Point(26.1023006,119.2789993);
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.remove(fm.findFragmentByTag("SpeakDialog")).commit();
+            pathfind(s1,p);
+    }
+
     private class MyLocationListener implements LocationListener {
 
         public MyLocationListener() {
@@ -675,84 +684,10 @@ public class RoutingSample extends Activity implements
 
     @Override
     public void onDialogRouteClicked(Point p1, Point p2) {
-
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.remove(fm.findFragmentByTag("Dialog")).commit();
-        List<String> msg;
-        String where = "";
-        Log.e("jj","http://58.199.250.101:8088/MyPathPlanServer/PathFindServer?start_x=" + p1.getX() + "&&start_y=" + p1.getY() + "&&end_x=" + p2.getX() + "&&end_y=" + p2.getY());
-        try {
-            OkHttpClientManager.getAsyn("http://58.199.250.101:8088/MyPathPlanServer/PathFindServer?start_x=" + p1.getX() + "&&start_y=" + p1.getY() + "&&end_x=" + p2.getX() + "&&end_y=" + p2.getY(), new OkHttpClientManager.ResultCallback<List<Path>>() {
-                @Override
-                public void onError(Request request, Exception e) {
-                    Log.e("jj","查询失败");
-                }
-
-                @Override
-                public void onResponse(List<Path> paths) {
-                    String where = "";
-                    for (Path path : paths) {
-                        Log.e("tag", path.getId());
-                        where = where + "luwang_ID=" + "'" + path.getId() + "'" + " or ";
-                    }
-                    Query mQuery = new Query();
-                    mQuery.setOutFields(new String[]{"*"});
-                    //  mQuery.setWhere("luwang_DIRECTION='1'");
-                    mQuery.setWhere(where.substring(0, where.length() - 4));
-                    Log.d("jj", "Select Features Error" + where.substring(0, where.length()));
-                    mQuery.setReturnGeometry(true);
-                    mQuery.setInSpatialReference(map.getSpatialReference());
-                    mQuery.setSpatialRelationship(SpatialRelationship.INTERSECTS);
-                    mFeatureLayer.selectFeatures(mQuery, ArcGISFeatureLayer.SELECTION_METHOD.NEW, new CallbackListener<FeatureSet>() {
-                        @Override
-                        public void onCallback(FeatureSet featureSet) {
-                            Log.d("jj", "成功");
-                        }
-
-                        @Override
-                        public void onError(Throwable throwable) {
-                            Log.d("jj", "Select Features Error" + mFeatureLayer.getFields()[0]);
-
-                        }
-
-                    });
-
-                    {
-                        where = "";
-                        for (Path path : paths) {
-                            Log.e("tag", path.getId());
-                            where = where + "luwang_ID=" + "'" + path.getId() + "'" + " or ";
-
-                        mQuery = new Query();
-                        mQuery.setOutFields(new String[]{"*"});
-                        //  mQuery.setWhere("luwang_DIRECTION='1'");
-                        mQuery.setWhere(where.substring(0, where.length() - 4));
-                        Log.d("jj", "Select Features Error" + where.substring(0, where.length()));
-                        mQuery.setReturnGeometry(true);
-                        mQuery.setInSpatialReference(map.getSpatialReference());
-                        mQuery.setSpatialRelationship(SpatialRelationship.INTERSECTS);
-                        mFeatureLayer.selectFeatures(mQuery, ArcGISFeatureLayer.SELECTION_METHOD.NEW, new CallbackListener<FeatureSet>() {
-                            @Override
-                            public void onCallback(FeatureSet featureSet) {
-                                Log.d("jj", "成功");
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-                                Log.d("jj", "Select Features Error" + mFeatureLayer.getFields()[0]);
-
-                            }
-
-                        });}
-
-
-                    }
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        pathfind(p1, p2);
 /*			PathFinding pathFinding=new PathFinding("10934672","1580849",roadRead.getNodes(),roadRead.getPaths());
 			msg=pathFinding.pathFinder();
 
@@ -799,6 +734,94 @@ public class RoutingSample extends Activity implements
 //
 //		QueryDirections(p_start, p_dest);
 
+    }
+
+    /**
+     * 路径搜索
+     * @param p1
+     * @param p2
+     */
+    private void pathfind(Point p1, Point p2) {
+
+        List<String> msg;
+        String where = "";
+        Log.e("jj","http://58.199.250.101:8088/MyPathPlanServer/PathFindServer?start_x=" + p1.getX() + "&&start_y=" + p1.getY() + "&&end_x=" + p2.getX() + "&&end_y=" + p2.getY());
+        try {
+            OkHttpClientManager.getAsyn("http://58.199.250.101:8088/MyPathPlanServer/PathFindServer?start_x=" + p1.getX() + "&&start_y=" + p1.getY() + "&&end_x=" + p2.getX() + "&&end_y=" + p2.getY(), new OkHttpClientManager.ResultCallback<List<Path>>() {
+                @Override
+                public void onError(Request request, Exception e) {
+                    Log.e("jj","查询失败");
+                }
+
+                @Override
+                public void onResponse(final List<Path> paths) {
+                    String where = "";
+                    for (Path path : paths) {
+                        Log.e("tag", path.getId());
+                        where = where + "luwang_ID=" + "'" + path.getId() + "'" + " or ";
+                    }
+                    Query mQuery = new Query();
+                    mQuery.setOutFields(new String[]{"*"});
+                    //  mQuery.setWhere("luwang_DIRECTION='1'");
+                    mQuery.setWhere(where.substring(0, where.length() - 4));
+                    Log.d("jj", "Select Features Error" + where.substring(0, where.length()));
+                    mQuery.setReturnGeometry(true);
+                    mQuery.setInSpatialReference(map.getSpatialReference());
+                    mQuery.setSpatialRelationship(SpatialRelationship.INTERSECTS);
+                    mFeatureLayer.selectFeatures(mQuery, ArcGISFeatureLayer.SELECTION_METHOD.NEW, new CallbackListener<FeatureSet>() {
+                        @Override
+                        public void onCallback(FeatureSet featureSet) {
+                            Log.d("jj", "成功");
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            Log.d("jj", "Select Features Error" + mFeatureLayer.getFields()[0]);
+
+                        }
+
+                    });
+                 /*   new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            {
+                                String where = "";
+                                for (Path path : paths) {
+                                    Log.e("tag", path.getId());
+                                    where = where + "luwang_ID=" + "'" + path.getId() + "'" + " or ";
+
+                                    Query mQuery = new Query();
+                                    mQuery.setOutFields(new String[]{"*"});
+                                    //  mQuery.setWhere("luwang_DIRECTION='1'");
+                                    mQuery.setWhere(where.substring(0, where.length() - 4));
+                                    Log.d("jj", "Select Features Error" + where.substring(0, where.length()));
+                                    mQuery.setReturnGeometry(true);
+                                    mQuery.setInSpatialReference(map.getSpatialReference());
+                                    mQuery.setSpatialRelationship(SpatialRelationship.INTERSECTS);
+                                    mFeatureLayer.selectFeatures(mQuery, ArcGISFeatureLayer.SELECTION_METHOD.NEW, new CallbackListener<FeatureSet>() {
+                                        @Override
+                                        public void onCallback(FeatureSet featureSet) {
+                                            Log.d("jj", "成功");
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable throwable) {
+                                            Log.d("jj", "Select Features Error" + mFeatureLayer.getFields()[0]);
+
+                                        }
+
+                                    });}
+
+
+                            }
+                        }
+                    }, 3000);*/
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 	/*
