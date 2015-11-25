@@ -1,8 +1,6 @@
 
 package com.hit.jj.mapshow;
 
-import java.util.ArrayList;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +13,8 @@ import android.widget.TextView;
 
 import com.esri.arcgis.android.samples.routing.R;
 
+import java.util.ArrayList;
+
 public class ShowDirections extends ListActivity {
 
   @Override
@@ -26,7 +26,7 @@ public class ShowDirections extends ListActivity {
     final ArrayList<String> directions = i.getStringArrayListExtra("directions");
     
     // Sets the list to the list of directions
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, directions);
+    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, directions);
     setListAdapter(adapter);
     ListView lv = getListView();
     lv.setTextFilterEnabled(true);

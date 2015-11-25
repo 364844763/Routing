@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">RoutingTask Sample</string>
-    <string name="app_name">RoutingTask Sample</string>
-    <string name="route_label">Press and hold map to route to that point or Click on the Get Directions icon</string>
-    <string name="sound">Sound</string>
-    <string name="actionBar_direction">Get Directions</string>
+    <string name="hello">路径导航</string>
+    <string name="app_name">路径导航</string>
+    <string name="route_label">长按地图，点击语音图标，方向图标开始导航</string>
+    <string name="sound">语音播报</string>
+    <string name="actionBar_direction">获取方向</string>
     <string name="geocode_url">http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer</string>
     <string name="useCurrlocation">Use current Location</string>
-    <string name="routing_title">Routing</string>
+    <string name="routing_title">导航</string>
     <string name="swap_addresses">Swap addresses</string>
-    <string name="clearText">Click to clear text</string>
-    <string name="route">Route</string>
+    <string name="clearText">清除文本</string>
+    <string name="route">导航</string>
     <string name="my_location">My Location</string>
     
 </resources>

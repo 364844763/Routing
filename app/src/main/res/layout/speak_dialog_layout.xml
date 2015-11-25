@@ -59,7 +59,10 @@
                 android:padding="5dp"
                 android:src="@drawable/btn_speak_white" />
         </LinearLayout>
-
+        <ListView
+            android:id="@+id/lv_destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
         <Button
             android:id="@+id/bGetRoute"
             android:layout_width="match_parent"

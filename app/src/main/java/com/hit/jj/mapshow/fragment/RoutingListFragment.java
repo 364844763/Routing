@@ -14,7 +14,7 @@
  *
  */
 
-package com.hit.jj.mapshow;
+package com.hit.jj.mapshow.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -33,6 +33,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.esri.arcgis.android.samples.routing.R;
+import com.hit.jj.mapshow.RoutingActivity;
+import com.hit.jj.mapshow.adapter.PathAdapter;
 
 /*
  * This fragment populates the Navigation Drawer with
@@ -48,7 +50,7 @@ public class RoutingListFragment extends Fragment implements
 
 	// Container Activity must implement this interface
 	public interface onDrawerListSelectedListener {
-		public void onSegmentSelected(String segment);
+		public void onSegmentSelected(String id);
 	}
 
 	@Override
@@ -77,8 +79,8 @@ public class RoutingListFragment extends Fragment implements
 		super.onActivityCreated(savedInstanceState);
 		tts = new TextToSpeech(getActivity(), this);
 
-		MyAdapter adapter = new MyAdapter(getActivity(),
-				RoutingSample.curDirections);
+		PathAdapter adapter = new PathAdapter( RoutingActivity.mPaths
+				,getActivity());
 		mDrawerList = (ListView) getActivity().findViewById(R.id.right_drawer);
 
 		mDrawerList.setAdapter(adapter);
@@ -100,7 +102,7 @@ public class RoutingListFragment extends Fragment implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		TextView segment = (TextView) view.findViewById(R.id.segment);
-		RoutingSample.mDrawerLayout.closeDrawers();
+		//RoutingSample.mDrawerLayout.closeDrawers();
 		if (isSoundOn)
 			speakOut(segment.getText().toString());
 		mCallback.onSegmentSelected(segment.getText().toString());
@@ -119,10 +121,10 @@ public class RoutingListFragment extends Fragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.direction:
-			if (RoutingSample.mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-				RoutingSample.mDrawerLayout.closeDrawers();
+			if (RoutingActivity.mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                RoutingActivity.mDrawerLayout.closeDrawers();
 			} else {
-				RoutingSample.mDrawerLayout.openDrawer(Gravity.RIGHT);
+                RoutingActivity.mDrawerLayout.openDrawer(Gravity.RIGHT);
 			}
 			return true;
 
@@ -139,7 +141,7 @@ public class RoutingListFragment extends Fragment implements
 	@Override
 	public void onStop() {
 		super.onStop();
-		tts.shutdown();
+//		tts.shutdown();
 
 	}
 

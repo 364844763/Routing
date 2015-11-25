@@ -14,9 +14,8 @@
  *
  */
 
-package com.hit.jj.mapshow;
+package com.hit.jj.mapshow.adapter;
 
-import java.util.ArrayList;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,8 @@ import android.widget.TextView;
 
 import com.esri.arcgis.android.samples.routing.R;
 
+import java.util.ArrayList;
+
 /*
  * Custom Adapter for the list view
  * 
@@ -36,7 +37,7 @@ public class MyAdapter extends ArrayAdapter<String> {
 	Context context;
 	ArrayList<String> directions;
 
-	MyAdapter(Context c, ArrayList<String> currDirections) {
+	public MyAdapter(Context c, ArrayList<String> currDirections) {
 		super(c, R.layout.list_item, R.id.segment, currDirections);
 		this.context = c;
 		directions = currDirections;

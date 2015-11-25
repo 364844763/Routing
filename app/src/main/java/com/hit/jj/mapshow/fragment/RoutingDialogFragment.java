@@ -14,7 +14,7 @@
  *
  */
 
-package com.hit.jj.mapshow;
+package com.hit.jj.mapshow.fragment;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -44,11 +44,12 @@ import com.esri.core.tasks.geocode.Locator;
 import com.esri.core.tasks.geocode.LocatorFindParameters;
 import com.esri.core.tasks.geocode.LocatorGeocodeResult;
 import com.hit.jj.http.OkHttpClientManager;
+import com.hit.jj.mapshow.RoutingActivity;
+import com.hit.jj.mapshow.adapter.BuildingAdapter;
 import com.hit.jj.pathplaning.Buliding;
 import com.squareup.okhttp.Request;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -223,14 +224,14 @@ public class RoutingDialogFragment extends DialogFragment implements
             // limit the results to 2
             findParams_source.setMaxLocations(2);
             // set address spatial reference to match map
-            findParams_source.setOutSR(RoutingSample.map.getSpatialReference());
+            findParams_source.setOutSR(RoutingActivity.map.getSpatialReference());
             // execute async task to geocode address
 
             LocatorFindParameters findParams_dest = new LocatorFindParameters(
                     address2);
             findParams_dest.setSourceCountry("CHINA");
             findParams_dest.setMaxLocations(2);
-            findParams_dest.setOutSR(RoutingSample.map.getSpatialReference());
+            findParams_dest.setOutSR(RoutingActivity.map.getSpatialReference());
 
             Geocoder gcoder = new Geocoder(findParams_source, findParams_dest);
             gcoder.execute();
@@ -296,7 +297,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 
             // Projecting the current location to the output spatial ref
             Point currLocation = (Point) GeometryEngine.project(
-                    RoutingSample.mLocation, egs, wm);
+                    RoutingActivity.mLocation, egs, wm);
 
             // Assignign current location to the field with value as
             // "My Location"
@@ -506,7 +507,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 
                 // Projecting the current location to the output spatial ref
                 Point currLocation = (Point) GeometryEngine.project(
-                        RoutingSample.mLocation, egs, wm);
+                        RoutingActivity.mLocation, egs, wm);
 
                 // Assignign current location to the field with value as
                 // "My Location"
@@ -540,18 +541,18 @@ public class RoutingDialogFragment extends DialogFragment implements
         OkHttpClientManager.getAsyn(url, new OkHttpClientManager.ResultCallback<List<Buliding>>() {
             @Override
             public void onError(Request request, Exception e) {
-                Toast.makeText(getActivity(),"网络错误",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onResponse(List<Buliding> bulidings) {
-               if (isSrc){
-                   mAdapterS.setData(bulidings);
-                   mListS=bulidings;
-               }else {
-                   mList=bulidings;
-                   mAdapter.setData(bulidings);
-               }
+                if (isSrc) {
+                    mAdapterS.setData(bulidings);
+                    mListS = bulidings;
+                } else {
+                    mList = bulidings;
+                    mAdapter.setData(bulidings);
+                }
             }
         });
 

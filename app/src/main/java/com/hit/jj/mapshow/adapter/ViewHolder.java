@@ -1,4 +1,4 @@
-package com.hit.jj.mapshow;
+package com.hit.jj.mapshow.adapter;
 
 import android.util.SparseArray;
 import android.view.View;

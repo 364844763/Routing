@@ -14,7 +14,7 @@
  *
  */
 
-package com.hit.jj.mapshow;
+package com.hit.jj.mapshow.fragment;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -45,6 +45,7 @@ import com.baidu.speech.VoiceRecognitionService;
 import com.esri.arcgis.android.samples.routing.R;
 import com.esri.core.geometry.Point;
 import com.hit.jj.http.OkHttpClientManager;
+import com.hit.jj.mapshow.adapter.BuildingAdapter;
 import com.hit.jj.pathplaning.Buliding;
 import com.squareup.okhttp.Request;
 

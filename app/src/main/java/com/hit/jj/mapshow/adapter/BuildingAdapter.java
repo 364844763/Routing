@@ -1,4 +1,4 @@
-package com.hit.jj.mapshow;
+package com.hit.jj.mapshow.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -60,7 +60,7 @@ public class BuildingAdapter extends BaseAdapter  implements Filterable {
         if(convertView==null){
             convertView= LayoutInflater.from(mContext).inflate(R.layout.list_item_build,parent,false);
         }
-        TextView tv=ViewHolder.get(convertView,R.id.tip_build);
+        TextView tv= ViewHolder.get(convertView, R.id.tip_build);
         tv.setText(bean.getName());
         return convertView;
     }
