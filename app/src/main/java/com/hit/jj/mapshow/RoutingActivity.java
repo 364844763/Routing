@@ -329,9 +329,10 @@ public class RoutingActivity extends Activity implements
 
             public boolean onLongPress(final float x, final float y) {
                 final Point loc = map.toMapPoint(x, y);
-//                Point  s1= new Point(26.1023006,119.2789993);
+                Point  s1= new Point(26.1023006,119.2789993);
                 Point sp = new Point(loc.getY(), loc.getX());
-                pathfind(mLocation, sp);
+//                pathfind(mLocation, sp);//实际的
+                pathfind(s1,sp);//测试点
                 return true;
             }
 
@@ -379,11 +380,12 @@ public class RoutingActivity extends Activity implements
 
     @Override
     public void onDialogRouteClicked(Point p) {
-//        Point s1 = new Point(26.1023006,119.2789993);
+        Point s1 = new Point(26.1023006,119.2789993);
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.remove(fm.findFragmentByTag("SpeakDialog")).commit();
-            pathfind(mLocation,p);
+           // pathfind(mLocation, p);//实际导航
+            pathfind(s1,p);//测试点
     }
 
     private class MyLocationListener implements LocationListener {
