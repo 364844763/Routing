@@ -29,6 +29,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -39,6 +40,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.tts.answer.auth.AuthInfo;
+import com.baidu.tts.client.SpeechError;
+import com.baidu.tts.client.SpeechSynthesizer;
+import com.baidu.tts.client.SpeechSynthesizerListener;
+import com.baidu.tts.client.TtsMode;
 import com.esri.android.map.Callout;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.LocationDisplayManager;
@@ -68,13 +74,18 @@ import com.hit.jj.mapshow.fragment.SpeakDialogFragment;
 import com.hit.jj.pathplaning.Path;
 import com.squareup.okhttp.Request;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class RoutingActivity extends Activity implements
         RoutingListFragment.onDrawerListSelectedListener,
-        RoutingDialogFragment.onGetRoute,SpeakDialogFragment.SpeakCallback {
+        RoutingDialogFragment.onGetRoute,SpeechSynthesizerListener,SpeakDialogFragment.SpeakCallback {
     public static MapView map = null;
     ArcGISDynamicMapServiceLayer tileLayer;
     GraphicsLayer routeLayer, hiddenSegmentsLayer;
@@ -122,6 +133,18 @@ public class RoutingActivity extends Activity implements
     // Index of the currently selected route segment (-1 = no selection)
     int selectedSegmentID = -1;
 
+    //===============================================================
+    private SpeechSynthesizer mSpeechSynthesizer;
+    private String mDirPath;
+    private static final String DIR_NAME = "RoutTTS";
+    private static final String SPEECH_FEMALE_MODEL_NAME = "bd_etts_speech_female.dat";
+    private static final String SPEECH_MALE_MODEL_NAME = "bd_etts_speech_male.dat";
+    private static final String TEXT_MODEL_NAME = "bd_etts_text.dat";
+    private static final String LICENSE_FILE_NAME = "temp_license";
+    private static final String ENGLISH_SPEECH_FEMALE_MODEL_NAME = "bd_etts_speech_female_en.dat";
+    private static final String ENGLISH_SPEECH_MALE_MODEL_NAME = "bd_etts_speech_male_en.dat";
+    private static final String ENGLISH_TEXT_MODEL_NAME = "bd_etts_text_en.dat";
+
     /**
      * Called when the activity is first created.
      */
@@ -138,6 +161,10 @@ public class RoutingActivity extends Activity implements
      */
     private void init() {
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        //初始化百度语音合成
+        initialEnv();
+        initialTts();
 
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
@@ -195,6 +222,43 @@ public class RoutingActivity extends Activity implements
         directionsLabel.setText(getString(R.string.route_label));
     }
 
+    public void pathfingding(List<Path> paths,int i){
+        boolean is=false;
+        String where="";
+        mFeatureLayer.removeAll();
+        for (int j = 0; j <paths.size() ; j++) {
+            if (j<i){
+                where = where + "luwang_ID=" + "'" + paths.get(j).getId() + "'" + " or ";
+            }
+        }
+        Query mQuery = new Query();
+        mQuery.setOutFields(new String[]{"*"});
+        //  mQuery.setWhere("luwang_DIRECTION='1'");
+        if (where.length()<4)return;
+        mQuery.setWhere(where.substring(0, where.length() - 4));
+        Log.d("jj", "Select Features Error" + where.substring(0, where.length()));
+        mQuery.setReturnGeometry(true);
+        mQuery.setInSpatialReference(map.getSpatialReference());
+        mQuery.setSpatialRelationship(SpatialRelationship.INTERSECTS);
+        mFeatureLayer.selectFeatures(mQuery, ArcGISFeatureLayer.SELECTION_METHOD.NEW, new CallbackListener<FeatureSet>() {
+            @Override
+            public void onCallback(FeatureSet featureSet) {
+                Log.d("jj", "成功");
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.d("jj", "Select Features Error" + mFeatureLayer.getFields()[0]);
+
+            }
+
+        });
+    }
+
+
+
+
     /**
      * 设置监听
      */
@@ -209,21 +273,28 @@ public class RoutingActivity extends Activity implements
         directionsLabel.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                if (curDirections == null)
+                if (mPaths == null)
                     return;
-
-                mDrawerLayout.openDrawer(Gravity.RIGHT);
-
-                String segment = directionsLabel.getText().toString();
-
-                ListView lv = RoutingListFragment.mDrawerList;
-                for (int i = 0; i < lv.getCount() - 1; i++) {
-                    String lv_segment = lv.getItemAtPosition(i).toString();
-                    if (segment.equals(lv_segment)) {
-                        lv.setSelection(i);
+                for (int i = 0; i <mPaths.size(); i++) {
+                    Path path=mPaths.get(i);//播报这条路
+                    switch (path.getNextDirection()) {
+                        case 0:
+                            speak("前方左转");
+                            break;
+                        case 1:
+                            speak("直行");
+                            break;
+                        case 2:
+                            speak("前方右转");
+                            break;
                     }
+                    clearAll();
+                    pathfingding(mPaths,i);
                 }
+
             }
+
+
 
         });
         img_cancel.setOnClickListener(new View.OnClickListener() {
@@ -329,6 +400,7 @@ public class RoutingActivity extends Activity implements
 
             public boolean onLongPress(final float x, final float y) {
                 final Point loc = map.toMapPoint(x, y);
+//                Point  s1= new Point(26.0734997,119.3150024);
                 Point  s1= new Point(26.1023006,119.2789993);
                 Point sp = new Point(loc.getY(), loc.getX());
 //                pathfind(mLocation, sp);//实际的
@@ -364,13 +436,13 @@ public class RoutingActivity extends Activity implements
         FragmentManager fm = getFragmentManager();
         if (fm.findFragmentByTag("Nav Drawer") == null) {
             FragmentTransaction ft = fm.beginTransaction();
-            RoutingListFragment frag = new RoutingListFragment();
+            RoutingListFragment frag = new RoutingListFragment(this);
             ft.add(frag, "Nav Drawer");
             ft.commit();
         } else {
             FragmentTransaction ft = fm.beginTransaction();
             ft.remove(fm.findFragmentByTag("Nav Drawer"));
-            RoutingListFragment frag = new RoutingListFragment();
+            RoutingListFragment frag = new RoutingListFragment(this);
             ft.add(frag, "Nav Drawer");
             ft.commit();
         }
@@ -380,12 +452,14 @@ public class RoutingActivity extends Activity implements
 
     @Override
     public void onDialogRouteClicked(Point p) {
+//        Point s1 = new Point(26.0734997,119.3150024);
         Point s1 = new Point(26.1023006,119.2789993);
+
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.remove(fm.findFragmentByTag("SpeakDialog")).commit();
            // pathfind(mLocation, p);//实际导航
-            pathfind(s1,p);//测试点
+            pathfind(s1, p);//测试点
     }
 
     private class MyLocationListener implements LocationListener {
@@ -491,6 +565,9 @@ public class RoutingActivity extends Activity implements
                 @Override
                 public void onError(Request request, Exception e) {
                     Log.e("jj","查询失败");
+                    dialog.dismiss();
+                    Toast.makeText(RoutingActivity.this,"没有到达目的地道路",Toast.LENGTH_LONG).show();
+
                 }
 
                 @Override
@@ -586,6 +663,9 @@ public class RoutingActivity extends Activity implements
         }
         Query mQuery = new Query();
         mQuery.setOutFields(new String[]{"*"});
+
+        if (where.length()<4) return;
+
         //  mQuery.setWhere("luwang_DIRECTION='1'");
         mQuery.setWhere(where.substring(0, where.length() - 4));
         Log.d("jj", "Select Features Error" + where.substring(0, where.length()));
@@ -684,5 +764,165 @@ public class RoutingActivity extends Activity implements
 
         }
     }
+    private void initialEnv() {
+        if (mDirPath == null) {
+            String sdcardPath = Environment.getExternalStorageDirectory()
+                    .toString();
+            mDirPath = sdcardPath + "/" + DIR_NAME;
+        }
+        makeDir(mDirPath);
+        copyFromAssetsToSdcard(false, SPEECH_FEMALE_MODEL_NAME, mDirPath
+                + "/" + SPEECH_FEMALE_MODEL_NAME);
+        copyFromAssetsToSdcard(false, SPEECH_MALE_MODEL_NAME, mDirPath
+                + "/" + SPEECH_MALE_MODEL_NAME);
+        copyFromAssetsToSdcard(false, TEXT_MODEL_NAME, mDirPath + "/"
+                + TEXT_MODEL_NAME);
+        copyFromAssetsToSdcard(false, LICENSE_FILE_NAME, mDirPath + "/"
+                + LICENSE_FILE_NAME);
+        copyFromAssetsToSdcard(false, "english/"
+                + ENGLISH_SPEECH_FEMALE_MODEL_NAME, mDirPath + "/"
+                + ENGLISH_SPEECH_FEMALE_MODEL_NAME);
+        copyFromAssetsToSdcard(false, "english/"
+                + ENGLISH_SPEECH_MALE_MODEL_NAME, mDirPath + "/"
+                + ENGLISH_SPEECH_MALE_MODEL_NAME);
+        copyFromAssetsToSdcard(false, "english/" + ENGLISH_TEXT_MODEL_NAME,
+                mDirPath + "/" + ENGLISH_TEXT_MODEL_NAME);
+    }
 
+    private void makeDir(String dirPath) {
+        File file = new File(dirPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+    }
+
+
+    private void initialTts() {
+        this.mSpeechSynthesizer = SpeechSynthesizer.getInstance();
+        this.mSpeechSynthesizer.setContext(this);
+        this.mSpeechSynthesizer.setSpeechSynthesizerListener(this);
+        // 文本模型文件路径 (离线引擎使用)
+        this.mSpeechSynthesizer.setParam(
+                SpeechSynthesizer.PARAM_TTS_TEXT_MODEL_FILE, mDirPath
+                        + "/" + TEXT_MODEL_NAME);
+        // 声学模型文件路径 (离线引擎使用)
+        this.mSpeechSynthesizer.setParam(
+                SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE, mDirPath
+                        + "/" + SPEECH_FEMALE_MODEL_NAME);
+        // 本地授权文件路径,如未设置将使用默认路径.设置临时授权文件路径，LICENCE_FILE_NAME请替换成临时授权文件的实际路径，仅在使用临时license文件时需要进行设置，如果在[应用管理]中开通了离线授权，不需要设置该参数，建议将该行代码删除（离线引擎）
+        this.mSpeechSynthesizer.setParam(
+                SpeechSynthesizer.PARAM_TTS_LICENCE_FILE, mDirPath + "/"
+                        + LICENSE_FILE_NAME);
+        // 请替换为语音开发者平台上注册应用得到的App ID (离线授权)
+         this.mSpeechSynthesizer.setAppId("7272539");
+        // 请替换为语音开发者平台注册应用得到的apikey和secretkey (在线授权)
+        this.mSpeechSynthesizer.setApiKey("iwQC7hBevX6A7bYaDbOo5ZH0", "7defb4c2969a0a2692a45c2ea6ec02f9");
+        // 授权检测接口
+        AuthInfo authInfo = this.mSpeechSynthesizer.auth(TtsMode.MIX);
+        if (authInfo.isSuccess()) {
+            Toast.makeText(this, "auth success", Toast.LENGTH_SHORT).show();
+            this.mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER,
+                    SpeechSynthesizer.SPEAKER_FEMALE);
+            mSpeechSynthesizer.initTts(TtsMode.MIX);
+        } else {
+            String errorMsg = authInfo.getTtsError().getDetailMessage();
+            Toast.makeText(this, "auth error"+errorMsg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void speak(String content) {
+        int result = this.mSpeechSynthesizer.speak(content);
+        Toast.makeText(this,"result:"+result,Toast.LENGTH_LONG).show();
+        if (result < 0) {
+
+        }
+    }
+
+
+
+    /**
+     * 将工程需要的资源文件拷贝到SD卡中使用（授权文件为临时授权文件，请注册正式授权）
+     *
+     * @param isCover
+     *            是否覆盖已存在的目标文件
+     * @param source
+     * @param dest
+     */
+    private void copyFromAssetsToSdcard(boolean isCover, String source,
+                                        String dest) {
+        File file = new File(dest);
+        if (isCover || (!isCover && !file.exists())) {
+            InputStream is = null;
+            FileOutputStream fos = null;
+            try {
+                is = getResources().getAssets().open(source);
+                String path = dest;
+                fos = new FileOutputStream(path);
+                byte[] buffer = new byte[1024];
+                int size = 0;
+                while ((size = is.read(buffer, 0, 1024)) >= 0) {
+                    fos.write(buffer, 0, size);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    if (is != null) {
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onSynthesizeStart(String s) {
+
+    }
+
+    @Override
+    public void onSynthesizeDataArrived(String s, byte[] bytes, int i) {
+
+    }
+
+    @Override
+    public void onSynthesizeFinish(String s) {
+
+    }
+
+    @Override
+    public void onSpeechStart(String s) {
+
+    }
+
+    @Override
+    public void onSpeechProgressChanged(String s, int i) {
+
+    }
+
+    @Override
+    public void onSpeechFinish(String s) {
+
+    }
+
+    @Override
+    public void onError(String s, SpeechError speechError) {
+
+    }
+    @Override
+    protected void onDestroy() {
+        this.mSpeechSynthesizer.release();
+        super.onDestroy();
+    }
 }

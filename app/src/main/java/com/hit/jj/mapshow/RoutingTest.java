@@ -1,4 +1,4 @@
-/*
+package com.hit.jj.mapshow;/*
 package com.esri.arcgis.android.samples.routing;
 
 import android.app.Activity;

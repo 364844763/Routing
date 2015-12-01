@@ -21,7 +21,7 @@ int drawable nav_right 0x7f020010
 int drawable nav_straight 0x7f020011
 int drawable nav_uturn 0x7f020012
 int id bGetRoute 0x7f090009
-int id direction 0x7f09001d
+int id direction 0x7f09001e
 int id directionsLabel 0x7f090011
 int id drawer_layout 0x7f09000e
 int id et_address 0x7f09001b
@@ -42,6 +42,7 @@ int id iv_myLocation 0x7f090014
 int id iv_speak 0x7f090012
 int id iv_speech 0x7f09001c
 int id list_row 0x7f09000a
+int id lv_destination 0x7f09001d
 int id map 0x7f09000f
 int id right_drawer 0x7f090016
 int id segment 0x7f09000c

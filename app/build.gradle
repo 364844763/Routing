@@ -37,4 +37,5 @@ dependencies {
     compile 'com.squareup.okio:okio:1.5.0'
     compile 'com.android.support:support-v13:23.0.1'
     compile files('libs/VoiceRecognition-2.0.1.jar')
+    compile files('libs/com.baidu.tts_2.1.1.20151118_1e57d7d_beta.jar')
 }

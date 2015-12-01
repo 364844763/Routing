@@ -37,7 +37,7 @@
             android:exported="false" />
 
         <activity
-            android:name="com.hit.jj.mapshow.RoutingSample"
+            android:name="com.hit.jj.mapshow.RoutingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/hello" >
             <intent-filter>

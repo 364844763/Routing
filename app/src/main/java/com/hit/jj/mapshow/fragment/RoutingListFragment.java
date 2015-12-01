@@ -18,6 +18,7 @@ package com.hit.jj.mapshow.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.Gravity;
@@ -31,10 +32,12 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import com.hit.jj.pathplaning.Path;
 
 import com.esri.arcgis.android.samples.routing.R;
 import com.hit.jj.mapshow.RoutingActivity;
 import com.hit.jj.mapshow.adapter.PathAdapter;
+
 
 /*
  * This fragment populates the Navigation Drawer with
@@ -43,10 +46,20 @@ import com.hit.jj.mapshow.adapter.PathAdapter;
  */
 public class RoutingListFragment extends Fragment implements
 		ListView.OnItemClickListener, TextToSpeech.OnInitListener {
+
+	private Context context;
 	public static ListView mDrawerList;
 	onDrawerListSelectedListener mCallback;
 	private TextToSpeech tts;
 	private boolean isSoundOn = true;
+	private RoutingActivity routingActivity;
+
+	public RoutingListFragment(){
+
+	}
+	public RoutingListFragment(RoutingActivity routingActivity){
+		this.routingActivity=routingActivity;
+	}
 
 	// Container Activity must implement this interface
 	public interface onDrawerListSelectedListener {
@@ -56,6 +69,7 @@ public class RoutingListFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.context=getActivity();
 	}
 
 	@Override
@@ -77,6 +91,7 @@ public class RoutingListFragment extends Fragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
 		tts = new TextToSpeech(getActivity(), this);
 
 		PathAdapter adapter = new PathAdapter( RoutingActivity.mPaths
@@ -91,7 +106,7 @@ public class RoutingListFragment extends Fragment implements
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
+										 boolean isChecked) {
 				isSoundOn = isChecked;
 			}
 		});
@@ -103,14 +118,29 @@ public class RoutingListFragment extends Fragment implements
 			long id) {
 		TextView segment = (TextView) view.findViewById(R.id.segment);
 		//RoutingSample.mDrawerLayout.closeDrawers();
-		if (isSoundOn)
-			speakOut(segment.getText().toString());
+//		if (isSoundOn)
+//			speakOut(segment.getText().toString());
+		if (isSoundOn) {
+			Path path = (Path) parent.getItemAtPosition(position);
+			switch (path.getNextDirection()) {
+				case 0:
+					routingActivity.speak("前方左转");
+					break;
+				case 1:
+					routingActivity.speak("直行");
+					break;
+				case 2:
+					routingActivity.speak("前方右转");
+					break;
+			}
+		}
+
 		mCallback.onSegmentSelected(segment.getText().toString());
 	}
 
-	private void speakOut(String text) {
-		tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-	}
+//	private void speakOut(String text) {
+//		tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+//	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -149,4 +179,5 @@ public class RoutingListFragment extends Fragment implements
 	public void onDestroy() {
 		super.onDestroy();
 	}
+
 }

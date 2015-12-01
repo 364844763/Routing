@@ -38,7 +38,7 @@ public final class R {
     }
     public static final class id {
         public static final int bGetRoute=0x7f090009;
-        public static final int direction=0x7f09001d;
+        public static final int direction=0x7f09001e;
         public static final int directionsLabel=0x7f090011;
         public static final int drawer_layout=0x7f09000e;
         public static final int et_address=0x7f09001b;
@@ -59,6 +59,7 @@ public final class R {
         public static final int iv_speak=0x7f090012;
         public static final int iv_speech=0x7f09001c;
         public static final int list_row=0x7f09000a;
+        public static final int lv_destination=0x7f09001d;
         public static final int map=0x7f09000f;
         public static final int right_drawer=0x7f090016;
         public static final int segment=0x7f09000c;
