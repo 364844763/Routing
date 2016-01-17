@@ -296,8 +296,7 @@ public class RoutingDialogFragment extends DialogFragment implements
             Point p2 = null;
 
             // Projecting the current location to the output spatial ref
-            Point currLocation = (Point) GeometryEngine.project(
-                    RoutingActivity.mLocation, egs, wm);
+            Point currLocation =new Point(RoutingActivity.mLocation.getY(),RoutingActivity.mLocation.getX());
 
             // Assignign current location to the field with value as
             // "My Location"
@@ -506,8 +505,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 //				Point p2 = null;
 
                 // Projecting the current location to the output spatial ref
-                Point currLocation = (Point) GeometryEngine.project(
-                        RoutingActivity.mLocation, egs, wm);
+                Point currLocation =new Point(RoutingActivity.mLocation.getY(),RoutingActivity.mLocation.getX());
 
                 // Assignign current location to the field with value as
                 // "My Location"

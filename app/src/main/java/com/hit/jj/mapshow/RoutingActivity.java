@@ -144,7 +144,7 @@ public class RoutingActivity extends Activity implements
     private static final String ENGLISH_SPEECH_FEMALE_MODEL_NAME = "bd_etts_speech_female_en.dat";
     private static final String ENGLISH_SPEECH_MALE_MODEL_NAME = "bd_etts_speech_male_en.dat";
     private static final String ENGLISH_TEXT_MODEL_NAME = "bd_etts_text_en.dat";
-
+    private boolean isStart=false;
     /**
      * Called when the activity is first created.
      */
@@ -275,23 +275,33 @@ public class RoutingActivity extends Activity implements
             public void onClick(View v) {
                 if (mPaths == null)
                     return;
-                for (int i = 0; i <mPaths.size(); i++) {
-                    Path path=mPaths.get(i);//播报这条路
-                    switch (path.getNextDirection()) {
-                        case 0:
-                            speak("前方左转");
-                            break;
-                        case 1:
-                            speak("直行");
-                            break;
-                        case 2:
-                            speak("前方右转");
-                            break;
-                    }
-                    clearAll();
-                    pathfingding(mPaths,i);
-                }
+                isStart=true;
 
+                for (int i = 0; i <mPaths.size(); i++) {
+
+                    final Path path=mPaths.get(i);//播报这条路
+                    final int finalI = i;
+                    new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (path.getNextDirection()) {
+                            case 1:
+                                speak("前方左转");
+                                break;
+                            case 0:
+                                speak("直行");
+                                break;
+                            case 2:
+                                speak("前方右转");
+                                break;
+                        }
+                        clearAll();
+                        pathfingding(mPaths, finalI);
+                    }
+
+
+                }, 10000);
+            }
             }
 
 
@@ -402,9 +412,10 @@ public class RoutingActivity extends Activity implements
                 final Point loc = map.toMapPoint(x, y);
 //                Point  s1= new Point(26.0734997,119.3150024);
                 Point  s1= new Point(26.1023006,119.2789993);
+                Point s2=new Point(mLocation.getY(),mLocation.getX());
                 Point sp = new Point(loc.getY(), loc.getX());
-//                pathfind(mLocation, sp);//实际的
-                pathfind(s1,sp);//测试点
+                pathfind(s2, sp);//实际的
+              //  pathfind(s1,sp);//测试点
                 return true;
             }
 
@@ -454,12 +465,12 @@ public class RoutingActivity extends Activity implements
     public void onDialogRouteClicked(Point p) {
 //        Point s1 = new Point(26.0734997,119.3150024);
         Point s1 = new Point(26.1023006,119.2789993);
-
+        Point s2=new Point(mLocation.getY(),mLocation.getX());
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.remove(fm.findFragmentByTag("SpeakDialog")).commit();
-           // pathfind(mLocation, p);//实际导航
-            pathfind(s1, p);//测试点
+            pathfind(s2, p);//实际导航
+            //pathfind(s1, p);//测试点
     }
 
     private class MyLocationListener implements LocationListener {
@@ -467,7 +478,6 @@ public class RoutingActivity extends Activity implements
         public MyLocationListener() {
             super();
         }
-
         /**
          * If location changes, update our current location. If being found for
          * the first time, zoom to our current position with a resolution of 20
@@ -480,6 +490,27 @@ public class RoutingActivity extends Activity implements
             mLocation = new Point(loc.getLongitude(), loc.getLatitude());
             //测试数据
 //			mLocation = new Point(119.2789993,26.1023006);
+            if (isStart){
+                for (int i = 0; i <mPaths.size(); i++) {
+
+                    Path path=mPaths.get(i);//播报这条路
+                    if (isShow(path)){
+                        clearAll();
+                        pathfingding(mPaths,i);
+                    switch (path.getNextDirection()) {
+                        case 0:
+                            speak("前方左转");
+                            break;
+                        case 1:
+                            speak("直行");
+                            break;
+                        case 2:
+                            speak("前方右转");
+                            break;
+                    }
+                }
+                }
+            }
             if (zoomToMe) {
                 Point p = (Point) GeometryEngine.project(mLocation, egs, wm);
                 map.zoomToResolution(p, 5);
@@ -573,6 +604,10 @@ public class RoutingActivity extends Activity implements
                 @Override
                 public void onResponse(final List<Path> paths) {
                     mPaths=paths;
+                    mPaths=new ArrayList<Path>();
+                    for (int j=paths.size()-1; j>=0;j--) {
+                        mPaths.add(paths.get(j));
+                    }
                     String where = "";
                     for (Path path : paths) {
                         Log.e("tag", path.getId());
@@ -924,5 +959,32 @@ public class RoutingActivity extends Activity implements
     protected void onDestroy() {
         this.mSpeechSynthesizer.release();
         super.onDestroy();
+    }
+    public double Distance(double long1, double lat1, double long2,
+                           double lat2)
+    {
+
+        double a, b, R;
+        R = 6378137; // 地球半径
+        lat1 = lat1 * Math.PI / 180.0;
+        lat2 = lat2 * Math.PI / 180.0;
+        a = lat1 - lat2;
+        b = (long1 - long2) * Math.PI / 180.0;
+        double d;
+        double sa2, sb2;
+        sa2 = Math.sin(a / 2.0);
+        sb2 = Math.sin(b / 2.0);
+        d = 2
+                * R
+                * Math.asin(Math.sqrt(sa2 * sa2 + Math.cos(lat1)
+                * Math.cos(lat2) * sb2 * sb2));
+        return d;
+    }
+    private boolean isShow(Path path){
+        if (Distance(mLocation.getX(),mLocation.getY(),path.geteLongitude(),path.geteLatitude())<10||Distance(mLocation.getX(),mLocation.getY(),path.geteLongitude(),path.geteLatitude())<10) {
+            return true;
+        }else {
+            return false;
+        }
     }
 }

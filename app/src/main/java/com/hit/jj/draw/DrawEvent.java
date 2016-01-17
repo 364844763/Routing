@@ -6,7 +6,7 @@ import java.util.EventObject;
 
 /**
  *
- * »­Í¼ÊÂ¼þ£¬Ä¿Ç°Ö»·â×°ÁËDRAW_ENDÊÂ¼þ£¬ÈçÓÐÐèÒª£¬¿ÉÌí¼ÓDRAW_STARTÖ®ÀàµÄÊÂ¼þ
+ *ï¿½ï¿½Í¼ï¿½Â¼ï¿½ï¿½ï¿½Ä¿Ç°Ö»ï¿½ï¿½×°ï¿½ï¿½DRAW_ENDï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½DRAW_STARTÖ®ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
  */
 public class DrawEvent extends EventObject {
 

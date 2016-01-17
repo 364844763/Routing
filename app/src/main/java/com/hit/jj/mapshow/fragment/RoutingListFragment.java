@@ -123,10 +123,10 @@ public class RoutingListFragment extends Fragment implements
 		if (isSoundOn) {
 			Path path = (Path) parent.getItemAtPosition(position);
 			switch (path.getNextDirection()) {
-				case 0:
+				case 1:
 					routingActivity.speak("前方左转");
 					break;
-				case 1:
+				case 0:
 					routingActivity.speak("直行");
 					break;
 				case 2:
